@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    fullName: {
+    firstAndLastName: {
         type: String,
         required: true
     },
-    address: {
-        type: String,
-        required: true
-    },
-    email: {
+    emailAddress: {
         type: String,
         required: true
     },
@@ -21,11 +17,21 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    confirmPassword: {
+    otp: {
         type: String,
-        required: true
+    },
+    otpExpiresAt: {
+        type: Date,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     },
 }, {timeStamps: true});
+
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 const userModel = mongoose.model('users', userSchema);
 
